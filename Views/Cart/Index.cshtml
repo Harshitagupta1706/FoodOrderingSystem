@@ -1,0 +1,21 @@
+@model List<CartItem>
+@{
+    ViewData["Title"] = "Your cart";
+    var total = Model.Sum(x => x.Price * x.Quantity);
+}
+<div class="page-heading"><span class="eyebrow">YOUR SELECTION</span><h1>Your cart</h1><p>Double-check your favourites before checkout.</p></div>
+@if (Model.Count == 0)
+{
+    <div class="empty-state"><div class="empty-icon">🛒</div><h2>Your cart is empty</h2><p>Pick something delicious from the menu.</p><a class="btn btn-primary" asp-controller="Home" asp-action="Index">Browse menu</a></div>
+}
+else
+{
+    <div class="cart-layout"><div class="cart-list">
+    @foreach (var item in Model)
+    {
+        <article class="cart-row"><img src="@item.ImageUrl" alt="@item.Name" /><div class="cart-item-info"><h3>@item.Name</h3><span>₹@item.Price.ToString("0.00") each</span>
+        <form asp-action="Update" method="post" class="quantity-form"><input type="hidden" name="id" value="@item.MenuItemId" /><label>Qty <input type="number" min="0" max="20" name="quantity" value="@item.Quantity" /></label><button class="text-button">Update / remove</button></form></div><strong>₹@((item.Price * item.Quantity).ToString("0.00"))</strong></article>
+    }
+    <form asp-action="Clear" method="post"><button class="text-button">Clear cart</button></form>
+    </div><aside class="summary-card"><h2>Order summary</h2><div class="summary-line"><span>Items (@Model.Sum(x=>x.Quantity))</span><strong>₹@total.ToString("0.00")</strong></div><div class="summary-line"><span>Delivery</span><strong>Free</strong></div><div class="summary-total"><span>Total</span><strong>₹@total.ToString("0.00")</strong></div><a class="btn btn-primary btn-wide" asp-controller="Checkout" asp-action="Index">Continue to checkout</a><a class="back-link" asp-controller="Home" asp-action="Index">← Continue shopping</a></aside></div>
+}

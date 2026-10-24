@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Online payment";
+}
+<div class="page-heading"><span class="eyebrow">SECURE CHECKOUT</span><h1>Complete payment</h1><p>Use Razorpay Test Mode credentials to simulate a payment.</p></div>
+<div class="payment-panel">
+    <div class="payment-amount">₹@(((long)ViewBag.AmountPaise / 100m).ToString("0.00"))</div>
+    <p>Order #@ViewBag.LocalOrderId · Razorpay Test Mode</p>
+    <button id="pay-button" class="btn btn-primary btn-wide">Pay securely with Razorpay</button>
+    <p class="muted small">This demo sends payment verification to the server before marking the order as paid.</p>
+    <form id="verify-form" asp-action="Verify" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="localOrderId" value="@ViewBag.LocalOrderId" />
+        <input type="hidden" name="razorpay_payment_id" id="rp-payment-id" />
+        <input type="hidden" name="razorpay_order_id" id="rp-order-id" />
+        <input type="hidden" name="razorpay_signature" id="rp-signature" />
+    </form>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+@section Scripts {
+<script>
+(function () {
+    const button = document.getElementById('pay-button');
+    button.addEventListener('click', function () {
+        const options = {
+            key: '@ViewBag.RazorpayKeyId',
+            amount: '@ViewBag.AmountPaise',
+            currency: 'INR',
+            name: 'BiteRush Food Ordering',
+            description: 'Food order #@ViewBag.LocalOrderId',
+            order_id: '@ViewBag.RazorpayOrderId',
+            prefill: { name: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode((string)ViewBag.CustomerName))', email: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode((string)ViewBag.Email))', contact: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode((string)ViewBag.Phone))' },
+            theme: { color: '#ff6b35' },
+            handler: function (response) {
+                document.getElementById('rp-payment-id').value = response.razorpay_payment_id;
+                document.getElementById('rp-order-id').value = response.razorpay_order_id;
+                document.getElementById('rp-signature').value = response.razorpay_signature;
+                document.getElementById('verify-form').submit();
+            },
+            modal: { ondismiss: function () { alert('Payment was not completed. Your order remains pending payment.'); } }
+        };
+        const checkout = new Razorpay(options);
+        checkout.on('payment.failed', function () { alert('Payment failed. Your order has not been marked as paid. Please retry or contact the restaurant.'); });
+        checkout.open();
+    });
+})();
+</script>
+}

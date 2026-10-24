@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+.vscode/
+
+# Local database files
+foodordering.db
+foodordering.db-shm
+foodordering.db-wal
+
+# Local configuration and secrets
+appsettings.Local.json

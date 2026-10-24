@@ -1,0 +1,74 @@
+```cshtml
+@model CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="page-heading">
+    <span class="eyebrow">ALMOST THERE</span>
+    <h1>Checkout</h1>
+    <p>Enter your delivery details and pay when your order arrives.</p>
+</div>
+
+<div class="checkout-layout">
+    <form asp-action="Index" method="post" class="form-card">
+
+        <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+        <h2>Delivery details</h2>
+
+        <label asp-for="CustomerName"></label>
+        <input asp-for="CustomerName" autocomplete="name" />
+        <span asp-validation-for="CustomerName" class="validation"></span>
+
+        <label asp-for="Email"></label>
+        <input asp-for="Email" autocomplete="email" />
+        <span asp-validation-for="Email" class="validation"></span>
+
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" autocomplete="tel" />
+        <span asp-validation-for="Phone" class="validation"></span>
+
+        <label asp-for="Address"></label>
+        <textarea asp-for="Address" rows="3" autocomplete="street-address"></textarea>
+        <span asp-validation-for="Address" class="validation"></span>
+
+        <h2 class="form-subhead">Payment method</h2>
+
+        <label class="payment-choice">
+            <input type="radio"
+                   asp-for="PaymentMethod"
+                   value="COD"
+                   checked />
+            <span>
+                <strong>Cash on Delivery</strong>
+                <small>Pay when your order arrives</small>
+            </span>
+        </label>
+
+        <button class="btn btn-primary btn-wide" type="submit">
+            Place Order
+        </button>
+
+        <p class="muted small">
+            Pay in cash when your food is delivered to your address.
+        </p>
+    </form>
+
+    <aside class="summary-card">
+        <h2>Secure checkout</h2>
+        <p>
+            Your order details are saved in the local SQLite database.
+            You can pay when your order arrives.
+        </p>
+
+        <div class="trust-line">✓ Delivery details validation</div>
+        <div class="trust-line">✓ Server-calculated order prices</div>
+        <div class="trust-line">✓ Cash on Delivery</div>
+    </aside>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

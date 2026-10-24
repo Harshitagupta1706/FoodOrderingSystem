@@ -1,0 +1,8 @@
+@model List<MenuItem>
+@{
+    ViewData["Title"] = "Manage menu";
+}
+<div class="admin-heading"><div><span class="eyebrow">MENU MANAGEMENT</span><h1>Manage menu</h1></div><div class="admin-actions"><a class="btn btn-primary" asp-action="Create">＋ Add item</a><a class="btn btn-light" asp-action="Index">Dashboard</a></div></div>
+<div class="table-card"><div class="table-wrap"><table><thead><tr><th>Dish</th><th>Category</th><th>Price</th><th>Availability</th><th>Action</th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td><strong>@item.Name</strong><br /><small>@item.Description</small></td><td>@item.Category</td><td>₹@item.Price.ToString("0.00")</td><td>@(item.IsAvailable ? "Available" : "Hidden")</td><td><form asp-action="ToggleAvailability" method="post"><input type="hidden" name="id" value="@item.Id" /><button class="btn btn-dark btn-small">@(item.IsAvailable ? "Hide item" : "Show item")</button></form></td></tr> }
+</tbody></table></div></div>

@@ -1,0 +1,7 @@
+@{
+    ViewData["Title"] = "Admin login";
+}
+<div class="auth-card"><span class="eyebrow">STAFF ACCESS</span><h1>Admin login</h1><p>Manage menu availability and review orders.</p>
+@if (ViewBag.Error is string error) { <div class="notice error">@error</div> }
+<form asp-action="Login" method="post"><label for="accessCode">Admin access code</label><input id="accessCode" name="accessCode" type="password" required autocomplete="current-password" /><button class="btn btn-primary btn-wide" type="submit">Sign in</button></form>
+<p class="muted small">Demo access code is documented in README.md. Change it before any public deployment.</p></div>
